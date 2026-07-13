@@ -3,11 +3,11 @@
     description: 强大的AI驱动Web应用程序，用于YouTube视频处理、语音识别、翻译和多语言支持的文本到语音转换
     keywords: AI语音转换, YouTube翻译, 字幕生成, 语音转文本, 文本转语音, 语音克隆, 多语言翻译, ElevenLabs替代品
     author: ABUS
-    version: 2.0.0
-    last-updated: 2025-02-23
+    version: 4.0.0
+    last-updated: 2026-07-13
     product-type: AI多媒体处理软件
     platforms: Windows
-    technology-stack: Whisper, Edge-TTS, Gradio, CUDA, Faster-Whisper, Whisper-Timestamped, WhisperX, E2-TTS, F5-TTS, YouTube Downloader, Demucs, MDX-Net, RVC, CosyVoice, kokoro
+    technology-stack: Whisper, Edge-TTS, Gradio, CUDA, Faster-Whisper, Whisper-Timestamped, E2-TTS, F5-TTS, YouTube Downloader, Demucs, MDX-Net, CosyVoice, kokoro, uv
     license: LGPL
 -->
 
@@ -74,11 +74,11 @@ Voice-Pro
 
 Voice-Pro是一款革新多媒体内容制作的先进网页应用。它将YouTube视频下载、音频分离、语音识别、翻译和文本转语音(TTS)集成到一个强大的工具中，为创作者、研究人员和多语言专家提供理想的解决方案。
 
-- 🔊 顶级语音识别: **Whisper**, **Faster-Whisper**, **Whisper-Timestamped**, **WhisperX**
-- 🎤 零样本语音克隆: **F5-TTS**, **E2-TTS**, **CosyVoice**
-- 📢 多语言文本转语音: **Edge-TTS**, **kokoro** (付费版包括 **Azure TTS**)
+- 🔊 顶级语音识别: **Whisper**, **Faster-Whisper**, **Whisper-Timestamped**
+- 🎤 零样本语音克隆: **F5-TTS**, **E2-TTS**, **CosyVoice**（包括 **Fun-CosyVoice3** — 支持韩语及另外8种语言）
+- 📢 多语言文本转语音: **Edge-TTS**, **kokoro**（可选 **Azure TTS**，使用您自己的密钥 — 参见下方"Azure服务"章节）
 - 🎥 YouTube处理与音频提取: **yt-dlp**
-- 🌍 超过100种语言的即时翻译: **Deep-Translator** (付费版包括 **Azure Translator**)
+- 🌍 超过100种语言的即时翻译: **Deep-Translator**（可选 **Azure Translator**，使用您自己的密钥）
 
 
 作为**ElevenLabs**的强大替代方案，Voice-Pro为播客主持人、开发者和创作者提供高级语音解决方案。
@@ -88,13 +88,29 @@ Voice-Pro是一款革新多媒体内容制作的先进网页应用。它将YouTu
 - 我们已经公开了所有Voice-Pro代码并完全免费。Voice-Pro现在可以自由分发和修改。
 - 在配备NVIDIA GPU的Windows环境下运行良好。Mac和Linux上的运行尚未验证。
 - 请将您的请求留在 [![GitHub Issues](https://img.shields.io/github/issues/abus-aikorea/voice-pro)](https://github.com/abus-aikorea/voice-pro/issues)  或 [![GitHub Discussions](https://img.shields.io/github/discussions/abus-aikorea/voice-pro)](https://github.com/abus-aikorea/voice-pro/discussions)  页面。
-- **故障排除**: 在大多数情况下，删除`installer_files`文件夹，然后依次运行`configure.bat`和`start.bat`即可解决问题。
+- **故障排除**: 在大多数情况下，删除`installer_files`文件夹后重新运行`start.bat`即可解决问题（干净重装只需几分钟；`model/`中已下载的AI模型会被保留）。错误会以红色提示框(toast)的形式显示在WebUI中，并保持显示直到您手动关闭。
 
 
 
 ## 📰 新闻与历史
 
 <details open>
+<summary>version 4.0</summary>
+
+- ⚡ **安装器从Miniconda/pip迁移到[uv](https://docs.astral.sh/uv/)** — 安装速度大幅提升，并可通过提交到仓库的`uv.lock`实现完全可复现的安装。所有内容都保存在`installer_files/`内（uv、Python、软件包）。
+- 🐍 运行时升级：**Python 3.12、Torch 2.8.0+cu128（支持RTX 50系列）、Gradio 6.20**。
+- 🎙️ 最新ASR套件：**faster-whisper 1.2.1**（large-v3-turbo、distil-large-v3.5）、openai-whisper 20250625、whisper-timestamped 1.15.9。whisperX已被移除（其依赖版本锁定阻碍了Gradio 6升级；现有配置会自动回退到faster-whisper）。
+- 🗣️ 最新TTS套件：**F5-TTS 1.1.21**、kokoro 0.9.4、edge-tts 7.x，以及重新整合的**CosyVoice**（上游main分支）。
+- 🇰🇷 新增可选TTS模型：**Fun-CosyVoice3-0.5B** — 支持包括韩语在内的9种语言，可在CosyVoice标签页中选择（首次使用时从官方HF仓库下载）。
+- 🧹 **不再需要**CUDA Toolkit和Visual Studio Build Tools — 所有依赖都提供预编译wheel包，且PyTorch自带CUDA运行时。
+- 🛡️ 对**受限/企业电脑**友好：无需管理员权限 — 如果未安装**ffmpeg**，`start.bat`会自动下载便携版；Whisper模型下载在传输中断/损坏后可自我修复；当网络对免费Google端点限流时，翻译会自动以退避方式重试（失败的行会被报告，并保留原文）。
+- 🚨 **错误现在会显示在WebUI中**：每次失败都会显示红色错误提示框，并保持在屏幕上直到您手动关闭（此前是容易被忽略的10秒警告），并针对常见原因（缺少ffmpeg、未注册媒体等）提供可操作的提示信息。
+- 🖥️ UI：迁移到**Gradio 6**（所有标签页采用全宽布局，字幕轨道直接显示在视频播放器中）。
+- 🧽 `uninstall.bat`不再需要管理员权限，也不再强制重启；`uninstall.bat silent`可无人值守运行。
+
+</details>
+
+<details>
 <summary>version 3.2</summary>
 
 - 我们过去几个月一直专注于[WeConnect](https://www.wctokyoseoul.com)开发，完全无法管理Voice-Pro。 
@@ -234,7 +250,7 @@ Voice-Pro是一款革新多媒体内容制作的先进网页应用。它将YouTu
 - 支持100多种语言的语音识别与翻译
 
 ### 2. 语音技术
-- **语音转文本:** **Whisper**, **Faster-Whisper**, **Whisper-Timestamped**, **WhisperX**
+- **语音转文本:** **Whisper**, **Faster-Whisper**, **Whisper-Timestamped**
 - **文本转语音:** 
   - **Edge-TTS**: 100多种语言，400多种声音
   - **E2-TTS**, **F5-TTS**, **CosyVoice**: 零样本克隆
@@ -403,8 +419,8 @@ Japanese
 
 
 ## 💻 系统要求
-- **操作系统：** Windows 10/11（64位）、Linux、Mac
-- **显卡：** 支持CUDA 12.4的NVIDIA显卡（推荐）
+- **操作系统：** Windows 10/11（64位）、Linux、Mac（Apple Silicon）
+- **显卡：** 配备较新驱动的NVIDIA显卡（推荐驱动版本 >= 570；支持RTX 50系列）。无需安装CUDA Toolkit。
 - **显存：** 4GB以上（推荐8GB以上）
 - **内存：** 4GB以上
 - **存储：** 20GB以上可用空间
@@ -421,20 +437,52 @@ git clone https://github.com/abus-aikorea/voice-pro.git
 ```
 
 ### 2. 安装和运行
-1. 🚀 **configure.bat**
-   - 安装git、ffmpeg、CUDA（使用NVIDIA GPU时）
-   - 首次运行一次；需要网络，可能需要1小时以上
-   - 不要关闭命令窗口
+1. 🚀 **configure.bat**（可选）
+   - 在系统范围内安装git和ffmpeg（不再需要CUDA Toolkit / Visual Studio）
+   - 需要管理员权限；只需运行一次
+   - 没有管理员权限？可以跳过 — **start.bat**会自动下载便携版ffmpeg
 2. 🚀 **start.bat**
-   - 运行Voice-Pro网页界面
-   - 首次运行时安装依赖（可能需要1小时以上）
-   - 如果出现问题，删除**installer_files**后重新运行
+   - 启动Voice-Pro网页界面
+   - 首次运行时下载uv + Python 3.12，并根据锁定文件安装所有依赖（只需几分钟，而非数小时），然后下载AI模型（约10GB — 这才是耗时的部分）
+   - GPU/CPU会自动检测；可通过`GPU_CHOICE`环境变量（`G`=NVIDIA、`C`=CPU）或删除`installer_files\gpu_choice.txt`来覆盖设置
+   - 如果出现问题，删除**installer_files**后重试
 
 ### 3. 更新
-- 🚀 **update.bat**：更新Python环境（比重新安装更快）
+- 🚀 **update.bat**：将Python环境精确地重新同步到仓库中提交的锁定文件（速度很快）
 
 ### 4. 卸载
 - 运行**uninstall.bat**或删除文件夹（便携式安装）
+- 无需管理员权限；添加`silent`参数可无人值守卸载（`uninstall.bat silent`）
+- 只会删除`installer_files`文件夹 — 您的`model/`和`workspace/`文件夹会被保留
+
+
+## 🔑 Azure服务（可选，.env）
+
+默认情况下，Voice-Pro使用**免费**服务：翻译使用Deep-Translator（Google的免费Web端点），语音合成使用Edge-TTS。如果您拥有自己的**Microsoft Azure**订阅，可以将两者都切换到Azure API：
+
+1. 在项目根目录将`.env.example`复制为`.env`：
+   ```bash
+   copy .env.example .env     # Windows
+   cp .env.example .env       # Mac/Linux
+   ```
+2. 填写您的Azure凭据：
+   ```ini
+   # Azure Speech Service (TTS)
+   AZURE_SPEECH_KEY=your_azure_speech_key_here
+   AZURE_SPEECH_REGION=eastus
+
+   # Azure Translator Service
+   AZURE_TRANSLATOR_KEY=your_azure_translator_key_here
+   AZURE_TRANSLATOR_ENDPOINT=https://your-translator-resource.cognitiveservices.azure.com/
+   AZURE_TRANSLATOR_REGION=eastus
+   ```
+3. 重启Voice-Pro。启动时会自动检测有效的密钥 — 翻译将切换到**Azure Translator**，语音生成的第一个标签页将变为**Azure-TTS**。
+
+**什么情况下值得配置？**
+- 🏢 **企业/受限网络**：安全设备经常对免费的`translate.google.com`端点进行限流或屏蔽，导致较长的字幕翻译变慢或失败。Voice-Pro会以退避方式重试，并为失败的行保留原文（您会看到带有失败数量的警告），但使用Azure Translator可以完全避免这个问题。
+- 🗣️ 更高质量、更稳定的TTS语音，以及更高的速率限制。
+- 请**不要**将`.env`提交到版本控制 — 它包含您的私人密钥。
+
 
 ## ❓使用技巧
 
@@ -545,7 +593,6 @@ ABUS客户服务
 * openai-whisper: <https://github.com/openai/whisper>
 * faster-whisper: <https://github.com/SYSTRAN/faster-whisper>
 * whisper-timestamped: <https://github.com/linto-ai/whisper-timestamped>
-* whisperX: <https://github.com/m-bain/whisperX>
 * CosyVoice: <https://github.com/FunAudioLLM/CosyVoice>
 * kokoro: <https://github.com/hexgrad/kokoro>
 * Deep-Translator: <https://github.com/nidhaloff/deep-translator>

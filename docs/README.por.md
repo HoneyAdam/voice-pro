@@ -3,11 +3,11 @@
     description: Poderoso aplicativo da web com tecnologia AI para processamento de vídeo do YouTube, reconhecimento de fala, tradução e texto para fala com suporte multilíngue
     keywords: Conversão de voz AI, tradução do YouTube, geração de legendas, fala para texto, texto para fala, clonagem de voz, tradução multilíngue, Alternativa ElevenLabs
     author: ABUS
-    version: 2.0.0
-    last-updated: 2025-02-23
+    version: 4.0.0
+    last-updated: 2026-07-13
     product-type: Software de processamento multimídia AI
     platforms: Windows
-    technology-stack: Whisper, Edge-TTS, Gradio, CUDA, Faster-Whisper, Whisper-Timestamped, WhisperX, E2-TTS, F5-TTS, YouTube Downloader, Demucs, MDX-Net, RVC, CosyVoice, kokoro
+    technology-stack: Whisper, Edge-TTS, Gradio, CUDA, Faster-Whisper, Whisper-Timestamped, E2-TTS, F5-TTS, YouTube Downloader, Demucs, MDX-Net, CosyVoice, kokoro, uv
     license: LGPL
 -->
 
@@ -75,11 +75,11 @@ Voice-Pro
 
 Voice-Pro é um aplicativo web de ponta que transforma a criação de conteúdo multimídia. Ele integra download de vídeos do YouTube, separação de voz, reconhecimento de fala, tradução e conversão de texto em fala (TTS) em uma única ferramenta poderosa, oferecendo uma solução ideal para criadores, pesquisadores e profissionais multilíngues.
 
-- 🔊 Reconhecimento de fala de alto nível: **Whisper**, **Faster-Whisper**, **Whisper-Timestamped**, **WhisperX**
-- 🎤 Clonagem de voz sem treinamento: **F5-TTS**, **E2-TTS**, **CosyVoice**
-- 📢 Texto para fala multilíngue: **Edge-TTS**, **kokoro** (A versão paga inclui **Azure TTS**)
+- 🔊 Reconhecimento de fala de alto nível: **Whisper**, **Faster-Whisper**, **Whisper-Timestamped**
+- 🎤 Clonagem de voz sem treinamento (zero-shot): **F5-TTS**, **E2-TTS**, **CosyVoice** (incl. **Fun-CosyVoice3** — coreano e mais 8 idiomas)
+- 📢 Texto para fala multilíngue: **Edge-TTS**, **kokoro** (opcionalmente **Azure TTS** com suas próprias chaves — consulte a seção "Serviços Azure" abaixo)
 - 🎥 Processamento de YouTube e extração de áudio: **yt-dlp**
-- 🌍 Tradução instantânea para mais de 100 idiomas: **Deep-Translator** (A versão paga inclui **Azure Translator**)
+- 🌍 Tradução instantânea para mais de 100 idiomas: **Deep-Translator** (opcionalmente **Azure Translator** com suas próprias chaves)
 
 
 Como uma alternativa robusta ao **ElevenLabs**, o Voice-Pro capacita podcasters, desenvolvedores e criadores com soluções de voz avançadas.
@@ -89,13 +89,29 @@ Como uma alternativa robusta ao **ElevenLabs**, o Voice-Pro capacita podcasters,
 - Tornamos todo o código do Voice-Pro de código aberto e completamente gratuito. O Voice-Pro agora pode ser distribuído e modificado livremente por qualquer pessoa.
 - Funciona bem no Windows com GPU NVIDIA. O funcionamento no Mac e Linux não foi verificado.
 - Por favor, deixe suas solicitações nas páginas de [![GitHub Issues](https://img.shields.io/github/issues/abus-aikorea/voice-pro)](https://github.com/abus-aikorea/voice-pro/issues)  ou [![GitHub Discussions](https://img.shields.io/github/discussions/abus-aikorea/voice-pro)](https://github.com/abus-aikorea/voice-pro/discussions) .
-- **Resolução de problemas**: Na maioria dos casos, os problemas podem ser resolvidos excluindo a pasta `installer_files` e, em seguida, executando `configure.bat` seguido por `start.bat`.
+- **Resolução de problemas**: Na maioria dos casos, os problemas podem ser resolvidos excluindo a pasta `installer_files` e, em seguida, executando `start.bat` novamente (uma reinstalação limpa leva apenas alguns minutos; os modelos de IA baixados em `model/` são mantidos). Os erros são exibidos na WebUI como notificações vermelhas (toasts) que permanecem na tela até serem fechadas.
 
 
 
 ## 📰 Notícias e Histórico
 
 <details open>
+<summary>version 4.0</summary>
+
+- ⚡ **Instalador migrado de Miniconda/pip para [uv](https://docs.astral.sh/uv/)** — instalações drasticamente mais rápidas e totalmente reproduzíveis a partir de um `uv.lock` versionado. Tudo permanece dentro de `installer_files/` (uv, Python, pacotes).
+- 🐍 Runtime atualizado: **Python 3.12, Torch 2.8.0+cu128 (suporte à série RTX 50), Gradio 6.20**.
+- 🎙️ Stack de ASR mais recente: **faster-whisper 1.2.1** (large-v3-turbo, distil-large-v3.5), openai-whisper 20250625, whisper-timestamped 1.15.9. O whisperX foi removido (suas dependências fixadas bloqueavam a atualização para o Gradio 6; configurações existentes voltam automaticamente para o faster-whisper).
+- 🗣️ Stack de TTS mais recente: **F5-TTS 1.1.21**, kokoro 0.9.4, edge-tts 7.x e **CosyVoice** re-incorporado (upstream main).
+- 🇰🇷 Novo modelo TTS opcional: **Fun-CosyVoice3-0.5B** — 9 idiomas, incluindo coreano, selecionável na aba CosyVoice (baixado do repositório oficial do HF no primeiro uso).
+- 🧹 CUDA Toolkit e Visual Studio Build Tools **não são mais necessários** — todas as dependências vêm com wheels pré-compilados e o PyTorch inclui o runtime CUDA.
+- 🛡️ Amigável para **PCs restritos / corporativos**: não são necessários direitos de administrador — o `start.bat` baixa automaticamente um **ffmpeg** portátil se ele não estiver instalado, os downloads dos modelos Whisper se recuperam sozinhos após transferências interrompidas/corrompidas, e a tradução tenta novamente automaticamente com backoff quando a rede limita a taxa do endpoint gratuito do Google (as linhas com falha são relatadas e os textos originais são mantidos).
+- 🚨 **Os erros agora são visíveis na WebUI**: cada falha exibe uma notificação de erro vermelha que permanece na tela até você fechá-la (antes era um aviso de 10 segundos, fácil de passar despercebido), com mensagens acionáveis para causas comuns (ffmpeg ausente, nenhuma mídia registrada, etc.).
+- 🖥️ Interface: migrada para o **Gradio 6** (layout de largura total em todas as abas, faixas de legenda exibidas diretamente nos players de vídeo).
+- 🧽 O `uninstall.bat` não requer mais direitos de administrador e não força mais a reinicialização; `uninstall.bat silent` executa sem supervisão.
+
+</details>
+
+<details>
 <summary>version 3.2</summary>
 
 - Estivemos focados no desenvolvimento do [WeConnect](https://www.wctokyoseoul.com) nos últimos meses e não conseguimos gerenciar o Voice-Pro. 
@@ -236,7 +252,7 @@ Como uma alternativa robusta ao **ElevenLabs**, o Voice-Pro capacita podcasters,
 - Suporta mais de 100 idiomas para reconhecimento e tradução de fala
 
 ### 2. Tecnologias de fala
-- **Fala para texto:** **Whisper**, **Faster-Whisper**, **Whisper-Timestamped**, **WhisperX**
+- **Fala para texto:** **Whisper**, **Faster-Whisper**, **Whisper-Timestamped**
 - **Texto para fala:** 
   - **Edge-TTS**: Mais de 100 idiomas, 400+ vozes
   - **E2-TTS**, **F5-TTS**, **CosyVoice**: Clonagem sem treinamento prévio
@@ -401,8 +417,8 @@ Japanese
 
 
 ## 💻 Requisitos do Sistema
-- **SO:** Windows 10/11 (64 bits), Linux, Mac
-- **GPU:** NVIDIA com suporte a CUDA 12.4 (recomendado)
+- **SO:** Windows 10/11 (64 bits), Linux, Mac (Apple Silicon)
+- **GPU:** GPU NVIDIA com driver recente (>= 570 recomendado; suporte à série RTX 50). A instalação do CUDA Toolkit NÃO é necessária.
 - **VRAM:** 4 GB ou mais (8 GB+ preferível)
 - **RAM:** 4 GB ou mais
 - **Armazenamento:** Pelo menos 20 GB de espaço livre
@@ -419,20 +435,51 @@ git clone https://github.com/abus-aikorea/voice-pro.git
 ```
 
 ### 2. Instalação e Execução
-1. 🚀 **configure.bat**
-   - Instala git, ffmpeg e CUDA (se usar GPU NVIDIA)
-   - Execute apenas uma vez; requer internet, pode levar mais de 1 hora
-   - Não feche a janela de comando
+1. 🚀 **configure.bat** (opcional)
+   - Configura git e ffmpeg em todo o sistema (CUDA Toolkit / Visual Studio não são mais necessários)
+   - Requer direitos de administrador; execute apenas uma vez
+   - Sem direitos de administrador? Pule esta etapa — o **start.bat** baixa automaticamente um ffmpeg portátil
 2. 🚀 **start.bat**
-   - Inicia a interface web do Voice-Pro
-   - Na primeira execução, instala dependências (pode levar mais de 1 hora)
-   - Em caso de problemas, delete **installer_files** e execute novamente
+   - Inicia a interface web (WebUI) do Voice-Pro
+   - A primeira execução baixa o uv + Python 3.12 e instala todas as dependências a partir do lockfile (questão de minutos, não de horas); em seguida, baixa os modelos de IA (~10GB — esta é a parte demorada)
+   - GPU/CPU é detectado automaticamente; para alterar, use a variável de ambiente `GPU_CHOICE` (`G`=NVIDIA, `C`=CPU) ou exclua `installer_files\gpu_choice.txt`
+   - Em caso de problemas, delete **installer_files** e tente novamente
 
 ### 3. Atualização
-- 🚀 **update.bat**: Atualiza o ambiente Python (mais rápido que reinstalar)
+- 🚀 **update.bat**: Ressincroniza o ambiente Python exatamente com o lockfile versionado (rápido)
 
 ### 4. Desinstalação
 - Execute **uninstall.bat** ou delete a pasta (instalação portátil)
+- Não requer direitos de administrador; adicione `silent` para remoção sem supervisão (`uninstall.bat silent`)
+- Apenas a pasta `installer_files` é removida — suas pastas `model/` e `workspace/` são mantidas
+
+
+## 🔑 Serviços Azure (opcional, .env)
+
+Por padrão, o Voice-Pro usa serviços **gratuitos**: Deep-Translator (endpoint web gratuito do Google) para tradução e Edge-TTS para síntese de fala. Se você tiver sua própria assinatura do **Microsoft Azure**, pode mudar ambos para as APIs do Azure:
+
+1. Copie `.env.example` para `.env` na raiz do projeto:
+   ```bash
+   copy .env.example .env     # Windows
+   cp .env.example .env       # Mac/Linux
+   ```
+2. Preencha suas credenciais do Azure:
+   ```ini
+   # Azure Speech Service (TTS)
+   AZURE_SPEECH_KEY=your_azure_speech_key_here
+   AZURE_SPEECH_REGION=eastus
+
+   # Azure Translator Service
+   AZURE_TRANSLATOR_KEY=your_azure_translator_key_here
+   AZURE_TRANSLATOR_ENDPOINT=https://your-translator-resource.cognitiveservices.azure.com/
+   AZURE_TRANSLATOR_REGION=eastus
+   ```
+3. Reinicie o Voice-Pro. Chaves válidas são detectadas automaticamente na inicialização — a tradução passa a usar o **Azure Translator** e a primeira aba de Geração de Voz se torna **Azure-TTS**.
+
+**Quando vale a pena configurar isso?**
+- 🏢 **Redes corporativas / restritas**: dispositivos de segurança frequentemente limitam a taxa ou bloqueiam o endpoint gratuito `translate.google.com`, o que torna lentas — ou faz falhar — traduções longas de legendas. O Voice-Pro tenta novamente com backoff e mantém o texto original das linhas com falha (você verá um aviso com a contagem de falhas), mas o Azure Translator evita o problema completamente.
+- 🗣️ Vozes TTS de maior qualidade e consistência, além de limites de taxa mais altos.
+- **NÃO** faça commit do `.env` no controle de versão — ele contém suas chaves privadas.
 
 ## ❓ Dicas de Uso
 
@@ -545,7 +592,6 @@ Serviço de Atendimento ao Cliente ABUS
 * openai-whisper: <https://github.com/openai/whisper>
 * faster-whisper: <https://github.com/SYSTRAN/faster-whisper>
 * whisper-timestamped: <https://github.com/linto-ai/whisper-timestamped>
-* whisperX: <https://github.com/m-bain/whisperX>
 * CosyVoice: <https://github.com/FunAudioLLM/CosyVoice>
 * kokoro: <https://github.com/hexgrad/kokoro>
 * Deep-Translator: <https://github.com/nidhaloff/deep-translator>

@@ -3,11 +3,11 @@
     description: Powerful AI-powered web application for YouTube video processing, speech recognition, translation, and text-to-speech with multilingual support
     keywords: AI voice conversion, YouTube translation, subtitle generation, speech-to-text, text-to-speech, voice cloning, multilingual translation, ElevenLabs Alternative 
     author: ABUS
-    version: 2.0.0
-    last-updated: 2025-02-23
+    version: 4.0.0
+    last-updated: 2026-07-13
     product-type: AI Multimedia Processing Software
     platforms: Windows
-    technology-stack: Whisper, Edge-TTS, Gradio, CUDA, Faster-Whisper, Whisper-Timestamped, WhisperX, E2-TTS, F5-TTS, YouTube Downloader, Demucs, MDX-Net, RVC, CosyVoice, kokoro
+    technology-stack: Whisper, Edge-TTS, Gradio, CUDA, Faster-Whisper, Whisper-Timestamped, E2-TTS, F5-TTS, YouTube Downloader, Demucs, MDX-Net, CosyVoice, kokoro, uv
     license: LGPL
 -->
 
@@ -254,7 +254,7 @@ A robust alternative to **ElevenLabs**, Voice-Pro empowers podcasters, developer
 - Supports 100+ languages for speech recognition & translation
 
 ### 2. Speech Technologies
-- **Speech-to-Text:** **Whisper**, **Faster-Whisper**, **Whisper-Timestamped**, **WhisperX**
+- **Speech-to-Text:** **Whisper**, **Faster-Whisper**, **Whisper-Timestamped**
 - **Text-to-Speech:** 
   - **Edge-TTS**: 100+ languages, 400+ voices
   - **E2-TTS**, **F5-TTS**, **CosyVoice**: Zero-shot cloning
@@ -593,7 +593,6 @@ ABUS Customer Service
 ## 📬 Contact
 - Email: <abus.aikorea@gmail.com>
 - Homepage (Korean): <https://www.wctokyoseoul.com>
-- Paid Version Purchase: [Shopify (Global)](https://r17wvy-t2.myshopify.com), [Naver (Korean)](https://smartstore.naver.com/abus)
 
 ## 🙏 Credits
 * Demucs: <https://github.com/facebookresearch/demucs>
@@ -604,7 +603,6 @@ ABUS Customer Service
 * openai-whisper: <https://github.com/openai/whisper>
 * faster-whisper: <https://github.com/SYSTRAN/faster-whisper>
 * whisper-timestamped: <https://github.com/linto-ai/whisper-timestamped>
-* whisperX: <https://github.com/m-bain/whisperX>
 * CosyVoice: <https://github.com/FunAudioLLM/CosyVoice>
 * kokoro: <https://github.com/hexgrad/kokoro>
 * Deep-Translator: <https://github.com/nidhaloff/deep-translator>
